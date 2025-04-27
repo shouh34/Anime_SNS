@@ -47,6 +47,7 @@
                             <p class="card-text">
                                 <a href="{{ route('anime.Info',['id' => $anime['mal_id']]) }}" class="btn btn-primary">詳細情報</a>
                                 <a href="{{ route('anime.Thread',['Title' => $anime['title_japanese']]) }}" class="btn btn-primary">スレッド作成</a>
+                                <a href="{{ route('anime.Thread',['Title' => $anime['title_japanese']]) }}" class="btn btn-primary">視聴リスト追加</a>
 
                                
                                 <br>

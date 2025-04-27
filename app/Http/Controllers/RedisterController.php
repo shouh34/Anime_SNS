@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\SampleNotification;
+
 
 class RedisterController extends Controller
 {
@@ -33,6 +36,11 @@ class RedisterController extends Controller
             'updated_at'=>'2025/01/11'
             
         ]);
+
+        
+        $email = 'AniConnect@gmail.com';
+        Notification::route('mail', $email) // メール送信先
+        ->notify(new SampleNotification()); // 通知を送信
 
         return redirect('/');
     }

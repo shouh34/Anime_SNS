@@ -14,13 +14,18 @@ class imgbbs_coment extends Model
 
 
     protected $fillable = [
-        'id',
-        'name',
+        'Name',
         'Comment',
         'Comment_data',
         'flg',
-        'bbs_flg'
+        'bbs_flg',
+        'reply_no',
+        'Good_no',
+        'Bad_no',
+        'created_at',
+        'updated_at'
+        
     ];
 
-    public $timestamps =true;
+  //  public $timestamps =true;
 }

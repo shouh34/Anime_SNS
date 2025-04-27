@@ -16,16 +16,32 @@
 
 <!-- Lightbox2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
+<style>
+p#Username{
+font-size: 30px;
+
+
+
+}
+
+</style>
 </head>
 <body><!-- ナビゲーションバー -->
     <div class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">ダッシュボード</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto"> <!-- ms-auto を追加して右寄せ -->
+                    <form method="POST" action="{{ route('anime.search') }}" class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            <input type="text" name="t1" size="50" class="form-control"  placeholder="検索したい内容を入力してください">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">検索</button>
+                        </div>
+                    </form>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile') }}">プロフィール</a>
                     </li>
@@ -58,22 +74,46 @@
 
 <!-- ダッシュボードコンテンツ -->
 <div class="container-fluid mt-4">
-    <h2>ダッシュボード</h2>
-    <p>ようこそ、{{ Auth::user()->name }}さん！</p>
 
     <!-- ダッシュボード内容 -->
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-8">
-            <!-- メインコンテンツ -->
+            <p id="Username" class="alert  text-center">
+                ようこそ、{{ Auth::user()->name }}さん！
+            </p>            <!-- メインコンテンツ -->
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">メインコンテンツ</h5>
-                    <p class="card-text">ここにメインのダッシュボード内容を表示します。</p>
+                    <h5 class="card-title">通知一覧</h5>
+                    <p class="card-text">
+                        ・2025-04-27 アニメ検索で
+                        <br>
+                        <div id="moreContent" class="collapse">
+                            <div class="card card-body mt-3">
+                                ここにもっと詳しい内容が表示されます。
+                            </div>
+                        </div>
+                        <a href="#moreContent" data-bs-toggle="collapse" class="btn btn-primary">もっと見る</a>
+
+                    </p>
+                </div>
+            </div>
+            <br>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">検索内容の履歴</h5>
+                    <p class="card-text">
+                        ここにメインのダッシュボード内容を表示します。
+                        <div id="moreContent2" class="collapse">
+                          
+                                ここにもっと詳しい内容が表示されます。
+                          
+                        </div>
+                        <a href="#moreContent2" data-bs-toggle="collapse" class="btn btn-primary">もっと見る</a>
+
+                    </p>
                 </div>
             </div>
         </div>
-
-      
     </div>
 </div>
 

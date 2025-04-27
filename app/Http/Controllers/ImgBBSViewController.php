@@ -121,11 +121,17 @@ if ($comment) {
     
             // コメント作成
             imgbbs_coment::create([
-                'name' => $username,
+                'Name' => $username,
                 'Comment' => $request->input('comment'),
                 'Comment_data' => $dateTimeString,
                 'flg' => $user_id,
                 'bbs_flg' => $id,
+                'reply_no' => "0",
+                'Good_no' => "0",
+                'Bad_no' => "0",
+                'created_at' => "2025-05-11",
+                'updated_at' => "2025-05-11" 
+                
             ]);
     
             // 成功時ログ

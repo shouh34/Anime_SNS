@@ -73,6 +73,14 @@
 .btn-primary:hover {
   background-color: #0056b3;
   transform: scale(1.05);
+ 
+}
+
+img#logo_img{
+text-align: left;
+
+
+    
 }
   </style>
   <script>
@@ -86,7 +94,7 @@
   <!-- ✅ ナビゲーションバー -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">PicSal</a>
+      <img src="{{ asset('images/logos.png') }}" alt="アイコン" id="logo_img" width="450" height="130" class="float-start">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
