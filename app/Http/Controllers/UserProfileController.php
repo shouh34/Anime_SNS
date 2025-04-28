@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\imgbbs_coment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserProfileController extends Controller
 {
@@ -69,39 +72,37 @@ class UserProfileController extends Controller
 
 
     //プロフィール編集画面で
-    public function Edit(Request $request,$id)
+
+    public function update(Request $request, $id)
     {
-
-
-
-    // IDで検索して更新
-    $user = User::findOrFail($id);
-    $user->name = $request->input('name');
-    $user->email = $request->input('email');
-
-    $user->comment = $request->input('comment');
-    /*
-    // ファイルがアップロードされていれば処理
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $imageName = time() . '_' . $file->getClientOriginalName();
-
-  
-        // 画像保存
-        $file->storeAs('public/images', $imageName);
-
-        // ファイル名をDBに保存（Thumbnail カラムに）
-        $user->Thmnail = $imageName;
-    }
-
-
-    */
-    $user->save(); // UPDATE実行
-  //  return redirect()->back()->with('success', 'プロフィールが更新されました');
-    
-    return redirect()->intended('/profile');
+        // IDでユーザーを検索して更新
+        $user = User::findOrFail($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->comment = $request->input('comment');
+        
+        // ファイルがアップロードされていれば処理
+        if ($request->hasFile('image')) {
+            $image = $request->file('profile_image');
             
+            // 画像の保存処理
+            $imagePath = $image->store('images', 'public/images'); // オリジナル画像を保存
+            
+            // サムネイルを作成
+            $thumbnailPath =basename($imagePath);
+            
+            // サムネイルのリサイズ
+          //  $thumbnail = Image::make($image)->resize(150, 150);  // サムネイルサイズは150x150
+            $image->save(public_path('storage/' . $thumbnailPath));  // サムネイル画像を保存
+    
+            // ユーザーのプロフィール画像パスを更新
+            $user->profile_image = $imagePath;  // オリジナル画像
+            $user->Thbmnail = $thumbnailPath;  // サムネイル画像
+            $user->save();
+        }
+    
+        $user->save(); // ユーザー情報の更新
+        return redirect()->route('profile.show', ['user' => $user])->with('success', 'プロフィールが更新されました');
     }
-
     
 }

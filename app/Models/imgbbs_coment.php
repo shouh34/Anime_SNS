@@ -22,10 +22,9 @@ class imgbbs_coment extends Model
         'reply_no',
         'Good_no',
         'Bad_no',
-        'created_at',
-        'updated_at'
+
         
     ];
 
-  //  public $timestamps =true;
+    public $timestamps =true;
 }

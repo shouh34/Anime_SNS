@@ -29,7 +29,6 @@ class RedisterController extends Controller
         User::create([
             'Email' =>  $request->input(['email']),
             'Password' => Hash::make($request->input('password')),
-            'Thmnail' => "",
             'name'=>$request->input('name'),
             'comment'=>'test',
             'created_at'=>'2025/12/11',

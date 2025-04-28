@@ -13,6 +13,10 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserSearcherController;
+use App\Http\Middleware\PreventBackHistory;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +30,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+/*
+Route::get('/auto-login', function () {
+    $user = User::find(1);
+
+    if (!$user) {
+        Log::warning('自動ログイン失敗：ID 1のユーザーが見つかりません');
+        abort(404, 'ユーザーが見つかりませんでした');
+    }
+
+    Auth::login($user, true); // ←trueでログイン保持
+    return redirect('/dashboard')->with('welcome', $user->name . 'さん、ようこそ！');
+});
+
+
+
+*/
 
 
 //季節アニメ
@@ -52,15 +73,24 @@ Route::get('/ThreadInfo/{id}', [ImgBBSController::class, 'Create'])->name('anime
 Route::middleware(['web'])->group(function () {
     // 認証が必要なルート
     Route::get('/', [HomeController::class, 'index'])->name('login');
+    
+    // ここでPOSTメソッドを処理
+    Route::post('/', [HomeController::class, 'store']);
 });
 
-
-Route::post('/', [HomeController::class, 'store']);
-Route::get('/python-test', function () {
-    $command = 'python -c "print(\'Hello from Python\')"';
-    $output = shell_exec($command . ' 2>&1');
-    return "<pre>$output</pre>";
+/*
+Route::middleware([PreventBackHistory::class])->group(function () {
+    // このグループ内のルートにミドルウェアが適用される
+    Route::get('/dashboard', [DashbordController::class, 'index'])->name('dashboard');
+    // 他のルートも追加できます
 });
+*/
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashbordController::class, 'index'])->name('dashboard');
+    // 他にも認証が必要なページを追加
+});
+
 
 
 //Good押したときの処理
@@ -81,12 +111,9 @@ Route::get('/profile', [UserProfileController::class, 'index'])->name('profile')
 //編集画面遷移
 Route::get('/profile_Edit', [UserProfileController::class, 'Store'])->name('profile_Edit');
 
-//登録
-//Route::post('/profile_Edit/{id}/Edit', [ProfileController::class, 'Edit'])->name('profile.register');
-
 
 //プロフィール更新
-Route::put('/profile_Update/{id}', [UserProfileController::class, 'Edit'])->name('profile.update');
+Route::put('/profile_Update/{id}', [UserProfileController::class, 'update'])->name('profile.update');
 
 
 //登録

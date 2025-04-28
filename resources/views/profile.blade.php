@@ -84,7 +84,7 @@
         <div class="profile-header">
             <div class="profile-name">
                 <img src="{{ asset('images/icon.png') }}" id="im1" alt="アイコン" width="150" height="150" class="rounded-circle me-3">
-    
+                <br>
             </div>
         </div>
     

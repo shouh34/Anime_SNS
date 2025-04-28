@@ -147,6 +147,11 @@ text-align: left;
 
           <button type="submit" class="btn btn-primary w-100">ログイン</button>
           <br>
+          <label>
+            <input type="checkbox" name="remember"> 次回から自動ログイン
+        </label>
+    
+          <br>
           <a href="{{ route('Newregister') }}">新規登録</a>
 
           @error('email')

@@ -42,7 +42,7 @@
               <input type="text" name="email" value={{$email}} class="form-control" placeholder="メールアドレス" required>
               <div class="register-title">コメント</div>
               <textarea name="comment" rows="5" cols="40" placeholder="コメントをしてください" class="form-control">{{$comment}}</textarea><br><br>
-              <input type="file" name="image">
+              <input type="file" name="profile_image" id="image" accept="image/*" required>
         
               <button type="submit" class="btn btn-primary w-100">プロフィール更新</button>
             </div>
