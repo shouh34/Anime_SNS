@@ -1,7 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Anitime;
+use App\Services\AniInfomations;
+use App\Services\Animation;
+use App\Services\AnitimeGenerate; // ← この use がない or 間違っている
+use App\Services\GeoCoderInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -9,8 +13,14 @@ use Illuminate\Support\Facades\Http;
 class AnimeController extends Controller
 {
     //
+    protected $geoCoder;
 
-
+    public function __construct(GeoCoderInterface $geoCoder)
+    {
+        // GeoCoderInterfaceにバインドされた実装（NominatimGeoCoder）が自動的に注入される
+        $this->geoCoder = $geoCoder;
+    }
+    
     public function index()
     {
 
@@ -19,21 +29,33 @@ class AnimeController extends Controller
 
     }
 
+
+    //アニメ検索機能
     public function search(Request $request)
     {
         $query = $request->input('q');
-        $results = [];
+
+
+        $query = $request->input('t1');
+        $page = $request->input('page', 1);
     
-        if ($query) {
-            $response = Http::get("https://api.jikan.moe/v4/anime", [
-                'q' => $query,
-                'limit' => 10,
-            ]);
+        $animeData = $this->geoCoder->getCoordinates($query, $page); // サービスクラスを通じて取得
+        return view('Dashbord', [
+            'results' => $animeData['result'], // ← これが必要
+            'pagination' => $animeData['pagination'] ?? [],
+            'splitid'=>'3'
+        ]);
     
-            $results = $response->json('data');
-        }
-    
-        return view('anime.search', compact('results', 'query'));
+        
+
+/*
+        //アニメ検索
+        $result= $this->geoCoder->getCoordinates($query);
+
+   
+       // return redirect()->route('anime.seasonal');
+        return view('anime.search', compact('result', 'query'));
+        */
         }
 
 
@@ -57,20 +79,6 @@ class AnimeController extends Controller
         $pagination = $response->json('pagination');
 
 
-/*
-        //キャラ検索
-        $characters = [];
-
-            // キャラ検索
-            $response = Http::get("https://api.jikan.moe/v4/characters", [
-                'q' => "カズマ",
-                'limit' => 5,
-            ]);
-    
-            $characters = $response->json('data');
-        
-    
-*/
 
 
         return view('Anime.result', compact('results', 'year', 'season', 'page', 'pagination'));

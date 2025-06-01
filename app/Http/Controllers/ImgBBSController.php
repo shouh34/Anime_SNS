@@ -49,7 +49,7 @@ class ImgBBSController extends Controller
         imgbbs::create([
             'Thread' => $Title,
             'Creater' =>"test",  // 作成者名
-            'text' =>"",  // コメント
+            'text' =>"aaaaaa",  // コメント
             'created_at'=>'2025/0403',
             'updated_at'=>'2025/04/12'
             

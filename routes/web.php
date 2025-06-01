@@ -6,6 +6,7 @@ use App\Http\Controllers\DMController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImgBBSController;
 use App\Http\Controllers\ImgBBSViewController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RedisterController;
@@ -14,9 +15,11 @@ use App\Http\Controllers\ShareController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserSearcherController;
 use App\Http\Middleware\PreventBackHistory;
+use App\Mail\TestMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,13 +52,18 @@ Route::get('/auto-login', function () {
 */
 
 
+
+//まっぷ
+Route::get('/Maps', [LocationController::class, 'index'])->name('Map.location');
+
+
 //季節アニメ
 Route::get('/seasonal', [AnimeController::class, 'seasonal'])->name('anime.seasonal');
 
 
 //アニメ検索
-Route::get('/anime/search', [AnimeController::class, 'search'])->name('anime.search');
-//Route::post('/AnimeSearch', [AnimeController::class, 'search'])->name('anime.post');
+Route::get('/anime/search', [AnimeController::class, 'index'])->name('anime.searcher');
+Route::post('/anime/search/post', [AnimeController::class, 'search'])->name('anime.post');
 
 
 
@@ -87,7 +95,7 @@ Route::middleware([PreventBackHistory::class])->group(function () {
 */
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashbordController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/user', [DashbordController::class, 'index'])->name('dashboard');
     // 他にも認証が必要なページを追加
 });
 
@@ -148,6 +156,14 @@ Route::get('/logout', [LogoutController::class,'index'])->name('logout');
 
 
 
+Route::get('/send-test-mail', function () {
+    $to = 'recipient@example.com';
+    $text = 'これはLaravelからのテストメールです。';
+
+    Mail::to($to)->send(new TestMail($text));
+
+    return 'メールを送信しました。';
+});
 
 //管理者
 

@@ -36,11 +36,11 @@ class RedisterController extends Controller
             
         ]);
 
-        
+        /*
         $email = 'AniConnect@gmail.com';
         Notification::route('mail', $email) // メール送信先
         ->notify(new SampleNotification()); // 通知を送信
-
+*/
         return redirect('/');
     }
 

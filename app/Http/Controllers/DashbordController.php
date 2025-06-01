@@ -17,6 +17,7 @@ class DashbordController extends Controller
     {
 
         $id=session('user_id');
+        $splitid=session('split_id');
 
         //このメールに対してメールを送信している
         /*
@@ -25,7 +26,7 @@ class DashbordController extends Controller
         */
     
     
-        return view("Dashbord", compact('id'));
+        return view("Dashbord", compact('splitid'));
     }
     
 
