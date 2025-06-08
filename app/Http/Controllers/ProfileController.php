@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -16,10 +18,33 @@ class ProfileController extends Controller
      */
 
 
+    //プロフィール検索機能
+    public function search(Request $request)
+    {
+        $keyword = request('t1');
+        $users = User::where('name', 'like', "%{$keyword}%")->get();
+
+
+        return view("Profile.list",compact('users'));
+
+    }
+
+    public function info()
+    {
+     $id=session('user_id');
+        $user = User::where('id', $id)->first();
+
+
+
+        return view("Profile.info",compact('user'));
+    }
+
+
+
 
      
 
-
+/*
 
     public function edit(Request $request): View
     {
@@ -27,41 +52,5 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
-
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current-password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
-    }
+*/
 }

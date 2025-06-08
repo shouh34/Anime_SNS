@@ -30,39 +30,13 @@ class AnimeController extends Controller
     }
 
 
-    //アニメ検索機能
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
-
-
-        $query = $request->input('t1');
-        $page = $request->input('page', 1);
-    
-        $animeData = $this->geoCoder->getCoordinates($query, $page); // サービスクラスを通じて取得
-        return view('Dashbord', [
-            'results' => $animeData['result'], // ← これが必要
-            'pagination' => $animeData['pagination'] ?? [],
-            'splitid'=>'3'
-        ]);
-    
-        
-
-/*
-        //アニメ検索
-        $result= $this->geoCoder->getCoordinates($query);
-
-   
-       // return redirect()->route('anime.seasonal');
-        return view('anime.search', compact('result', 'query'));
-        */
-        }
 
 
 
-
+    //検索ボックスの処理
     public function seasonal(Request $request)
     {
+        
         //年数取得
         $year = Carbon::now()->year;
 
@@ -81,7 +55,7 @@ class AnimeController extends Controller
 
 
 
-        return view('Anime.result', compact('results', 'year', 'season', 'page', 'pagination'));
+     return view('Anime.result', compact('results', 'year', 'season', 'page', 'pagination'));
     }
     
 }

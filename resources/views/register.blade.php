@@ -36,7 +36,7 @@
 </head>
 <body>
 
-  <form method="POST" action="{{ route('Newregister.post') }}">
+  <form method="POST" action="{{ route('register.post') }}">
     @csrf
     <div class="register-card">
       <div class="register-title">新規登録</div>

@@ -115,7 +115,7 @@ text-align: left;
             <a class="nav-link" href="{{ route('login') }}">ログイン</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('Newregister') }}">新規登録</a>
+            <a href="{{ route('register') }}">新規登録</a>
           </li>
         </ul>
       </div>
@@ -152,7 +152,7 @@ text-align: left;
         </label>
     
           <br>
-          <a href="{{ route('Newregister') }}">新規登録</a>
+          <a href="{{ route('register') }}">新規登録</a>
 
           @error('email')
             <div style="color:red;">{{ $message }}</div>

@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashbordController;
 use App\Http\Controllers\DMController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\ImgBBSController;
 use App\Http\Controllers\ImgBBSViewController;
 use App\Http\Controllers\LocationController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RedisterController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShareController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserSearcherController;
 use App\Http\Middleware\PreventBackHistory;
@@ -34,25 +37,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-/*
-Route::get('/auto-login', function () {
-    $user = User::find(1);
-
-    if (!$user) {
-        Log::warning('自動ログイン失敗：ID 1のユーザーが見つかりません');
-        abort(404, 'ユーザーが見つかりませんでした');
-    }
-
-    Auth::login($user, true); // ←trueでログイン保持
-    return redirect('/dashboard')->with('welcome', $user->name . 'さん、ようこそ！');
-});
-
-
-
-*/
-
-
-
 //まっぷ
 Route::get('/Maps', [LocationController::class, 'index'])->name('Map.location');
 
@@ -63,14 +47,13 @@ Route::get('/seasonal', [AnimeController::class, 'seasonal'])->name('anime.seaso
 
 //アニメ検索
 Route::get('/anime/search', [AnimeController::class, 'index'])->name('anime.searcher');
-Route::post('/anime/search/post', [AnimeController::class, 'search'])->name('anime.post');
 
 
+//ダッシュボードの検索ボックス
+Route::post('/Profile/search/post', [ProfileController::class, 'search'])->name('Profile.post');
 
-//アニメ専用スレッド作成
-Route::get('/ThreadCreate/{Title}', [ImgBBSController::class, 'Create'])->name('anime.Thread');
-
-Route::get('/ThreadInfo/{id}', [ImgBBSController::class, 'Create'])->name('anime.Info');
+//プロフィールの詳細情報
+Route::get('/Profile/info', [ProfileController::class,'info'])->name('Profile.info');
 
 
 
@@ -86,89 +69,86 @@ Route::middleware(['web'])->group(function () {
     Route::post('/', [HomeController::class, 'store']);
 });
 
-/*
-Route::middleware([PreventBackHistory::class])->group(function () {
-    // このグループ内のルートにミドルウェアが適用される
-    Route::get('/dashboard', [DashbordController::class, 'index'])->name('dashboard');
-    // 他のルートも追加できます
-});
-*/
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/user', [DashbordController::class, 'index'])->name('dashboard');
     // 他にも認証が必要なページを追加
-});
 
-
-
-//Good押したときの処理
-Route::get('/Good_add/{id}', [ImgBBSViewController::class, 'Good_add'])->name('Good.add');
-
-Route::get('/reply_add/{id}', [ImgBBSViewController::class, 'Reply_add'])->name('Reply.add');
-
-//DM
-Route::get('/DM', [DMController::class, 'index'])->name('DM');
-Route::post('/DM/store', [DMController::class, 'store'])->name('DM.store');
 
 //設定
 Route::get('/Settings', [SettingsController::class, 'index'])->name('Settings');
 
 //プロフィール
 Route::get('/profile', [UserProfileController::class, 'index'])->name('profile');
+Route::get('/profile/info', [UserProfileController::class, 'info'])->name('Profile.info');
 
 //編集画面遷移
-Route::get('/profile_Edit', [UserProfileController::class, 'Store'])->name('profile_Edit');
+Route::get('/profile/Edit/{id}', [UserProfileController::class, 'index'])->name('Profile.Edit');
 
 
 //プロフィール更新
-Route::put('/profile_Update/{id}', [UserProfileController::class, 'update'])->name('profile.update');
+Route::put('/profile/Update/{id}', [UserProfileController::class, 'update'])->name('profile.update');
+Route::get('/profile', [UserProfileController::class, 'index'])->name('profile');
 
 
 //登録
-Route::get('/register', [RedisterController::class, 'index'])->name('register');
+//Route::get('/register', [RedisterController::class, 'index'])->name('register');
 
 //共有
 Route::get('/share', [ShareController::class, 'index'])->name('Share');
 
-//新規登録
-Route::get('/Newregister', [RedisterController::class, 'index'])->name('Newregister');
-Route::post('/Newregister/store', [RedisterController::class, 'store'])->name('Newregister.post');
 
 
-
+//ダッシュボード
 Route::get('/Dashbord', [DashbordController::class, 'index'])->name('Dashbord');;
-
-//スレッド作成
-Route::get('/ImgBBS', [ImgBBSController::class,'index'])->name('ImgBBS');
-Route::post('/ImgBBS', [ImgBBSController::class,'post']);
-
-
-//スレッド一覧
-Route::get('/ImgBBS_view', [ImgBBSViewController::class,'index'])->name('ImgBBS_view');
-//スレッド内に移動
-Route::get('/ImgBBS_view/post/{id}', [ImgBBSViewController::class,'store'])->name('ImgBBS_post_view');
-
-Route::post('/ImgBBS_view/post/{id}/comment', [ImgBBSViewController::class,'post'])->name('ImgBBS.post.comment');
-
 //ログアウト
 Route::get('/logout', [LogoutController::class,'index'])->name('logout');
 
 
 
 
-Route::get('/send-test-mail', function () {
-    $to = 'recipient@example.com';
-    $text = 'これはLaravelからのテストメールです。';
+//ブログ
+Route::get('/Blog/index', [BlogController::class,'index'])->name('Blog.index');
 
-    Mail::to($to)->send(new TestMail($text));
+//本文を見る
+Route::get('/Blog/main/{id}', [BlogController::class, 'main_info'])->name('Blog.main');
 
-    return 'メールを送信しました。';
-});
+
+
+
+//ブログ投稿画面表示
+Route::get('/Blog/Edit', [BlogController::class,'Edit'])->name('Blog.Edit');
+
+
+//投稿
+Route::post('/Blog/Edit/post', [BlogController::class,'post'])->name('Blog.post');
+
+
+
+
+
+
+//編集画面表示
+Route::get('/Blog/ReEdit/{id}', [BlogController::class, 'Edit_info'])->name('Blog.ReEdit');
+//編集投稿
+Route::post('/Blog/ReEdit/{id}', [BlogController::class, 'Edit_info_post'])->name('Blog.ReEdit.post');
+
+
+//ブログ記事削除
+Route::get('/Blog/Delete/{id}', [BlogController::class, 'Delete'])->name('Blog.Delete');
+
 
 //管理者
 
 //ユーザー検索
 Route::get('/UserSearch', [UserSearcherController::class,'index'])->name('User.Search');
 
+Route::post('/upload-image', [BlogController::class, 'upload'])->name('upload.image');
 
+});
+
+
+//新規登録
+Route::get('/register', [RedisterController::class, 'index'])->name('register');
+Route::post('/register/store', [RedisterController::class, 'store'])->name('register.post');
 

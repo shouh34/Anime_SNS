@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
 <div class="container mt-4">
     <h2 class="mb-4">アニメ検索</h2>
-    <form method="POST" action="{{ route('anime.post') }}" class="row g-3 mb-4">
+    <form method="POST" action="{{ route('Profile.post') }}" class="row g-3 mb-4">
         @csrf
         <div class="col-md-8">
             <input type="text" name="q" class="form-control" placeholder="アニメ名を入力">
